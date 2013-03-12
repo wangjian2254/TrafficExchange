@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="cache-control" content="no-cache"/>
+    {% block title %}
+        <title>网站流量交换</title>
+    {% endblock  %}
+    {% block keywords %}
+    {% endblock  %}
+    {% block desc %}
+    {% endblock  %}
+    {% block basecss %}
+        <link href="/media/css/default.css" rel="stylesheet" type="text/css">
+        <link href="/media/css/style.css" rel="stylesheet" type="text/css">
+        <link href="/media/css/commitlist.css" rel="stylesheet" type="text/css">
+    {% endblock  %}
+    {% block basejs %}
+{#            <script src="/media/jquery/jquery-1.7.2.min.js"></script>#}
+{#            <script src="/media/jquery/jquery-ui-1.8.20.custom.min.js"></script>#}
+            <script src="/media/js/jquery.js"></script>
+            <script type="text/javascript">
+                var $j = jQuery.noConflict();
+            </script>
+            <script src="/media/js/json2.js"></script>
+            <script src="/media/js/table.js"></script>
+            <script src="/media/js/val.js"></script>
+            <script src="/media/js/artDialog.source.js?skin=blue"></script>
+            <script src="/media/js/iframeTools.source.js"></script>
+            <script src="/media/date/WdatePicker.js"></script>
+            <script type="text/javascript">
+                $j(function(){
+                    result_alert2('{{ result }}','{{ msg }}');
+                });
+            </script>
+    {% endblock  %}
+</head>
+<body class="div_c">
+    {% include "include/top.html" %}
+{% block content %}
+{% endblock  %}
+    {% include "include/bottom.html" %}
+</body>
+</html>
