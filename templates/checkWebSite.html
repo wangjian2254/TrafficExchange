@@ -1,0 +1,48 @@
+{% extends "basepage/basepage.html" %}
+{% load ueditor_filter %}
+{% block title %}
+    <title>网站添加 </title>
+{% endblock  %}
+{% block content %}
+<script type="text/javascript">
+    function submitForm(){
+        if(!valSubmit()){
+            return;
+            }
+        editor.sync();
+        $j("#form1")[0].submit();
+    }
+
+</script>
+    <div class="con_center" >
+    <form id="form1" action="/saveWebSite" method="post">
+        <table id="website_table" class="table0 bigtable tdpadding tablemargin" width="100%" cellpadding="0" cellspacing="0" border="0">
+            <tr >
+                <td align="left" bgcolor="#87ceeb">
+                    <b>1.输入网站</b>
+                </td>
+                <td align="left">
+                    <b>2.验证网站</b>
+                </td>
+                <td align="left">
+                    <b>3.完成网站验证</b>
+                </td>
+            </tr>
+
+            <tr>
+                <td align="center" colspan="4">
+                    <div style="width: 40%;float: left;"></div>
+                </td>
+            </tr>
+            <tr>
+                <td align="center" colspan="4">
+                    <a href="#" onclick="submitForm()"  class="commit_btn" >完成验证</a>
+                 {% csrf_token %}
+                </td>
+            </tr>
+        </table>
+    </form>
+    </div>
+
+
+{% endblock  %}

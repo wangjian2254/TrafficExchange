@@ -1,0 +1,17 @@
+<div id="top">
+<div style="float: left;padding-left: 50px;">
+    <a href="/"  class="topfont">首页</a>
+    <a href="/addWebSite"  class="topfont">添加网站</a>
+    <a href="/getCode"  class="topfont">代码获取</a>
+    <a href="/SearchPeople"  class="topfont">流量交换策略</a>
+    <a href="/SearchPeople"  class="topfont">数据分析</a>
+    <a href="/SearchPeople"  class="topfont">帮助</a>
+</div>
+    {% if user.is_authenticated %}
+        <span class="topfont">{{ user.username }}</span>{{ user.get_full_name }}<span class="topfont">|</span><a href="/jianlilist"  class="topfont">简历管理</a><span class="topfont">|</span><a href="/accounts/logout/"  class="topfont">退出</a>
+    {% else %}
+        <a href="/accounts/login/"  class="topfont">登录</a><span class="topfont">|</span><a href="/Reg"  class="topfont">注册</a>
+    {% endif %}
+
+</div>
+<div id="top_tihuan"></div>

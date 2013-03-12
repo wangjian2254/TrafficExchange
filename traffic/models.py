@@ -12,6 +12,9 @@ from django.db import models
 #    user=models.OneToOneField(User,help_text=u'注册用户')
 
 class Kind(models.Model):
+    '''
+    网站的类型，网站类型可以由用户指定，交换流量策略。
+    '''
     name=models.CharField(max_length=10,unique=True,help_text=u'内容类型')
 
     class Admin():
@@ -22,7 +25,11 @@ class Kind(models.Model):
         return self.name
 
 class Style(models.Model):
+    '''
+    通过js生成的 流量交换代码的风格
+    '''
     name=models.CharField(max_length=30,unique=True,help_text=u'展示风格，css 样式')
+    htmlcode=models.CharField(default='',max_length=2000,verbose_name=u'html 代码',help_text=u'客户网站，引入这个html代码，就可以实现流量交换')
 
     class Admin():
         pass
@@ -32,13 +39,16 @@ class Style(models.Model):
         return self.name
 
 class WebSite(models.Model):
+    '''
+    用户注册的网站
+    '''
     domain=models.CharField(max_length=200,unique=True,help_text=u'网站域名，每个二级域名都算是一个')
-    name=models.CharField(max_length=50,help_text=u'网站名称')
+    name=models.CharField(max_length=50,blank=True,null=True,help_text=u'网站名称')
     admin=models.ForeignKey(User,help_text=u'隶属用户')
     is_action=models.BooleanField(default=True,help_text=u'是否正在使用')
-    kinds=models.ManyToManyField(Kind,help_text=u'网站类型')
-    is_check=models.BooleanField(default=True,help_text=u'是否通过审核')
-    last_check_date=models.DateTimeField(default=datetime.datetime.now,help_text=u'最后一次审核时间')
+    kinds=models.ManyToManyField(Kind,blank=True,null=True,help_text=u'网站类型')
+    is_check=models.BooleanField(default=False,help_text=u'是否通过审核')
+    last_check_date=models.DateTimeField(default=datetime.datetime.now,blank=True,null=True,help_text=u'最后一次审核时间')
     show_kinds=models.ManyToManyField(Kind,related_name='showkinds',blank=True,null=True,help_text=u'网站展示哪些类型的网站链接，白名单')
     not_show_kinds=models.ManyToManyField(Kind,related_name='notshowkinds',blank=True,null=True,help_text=u'网站不展示哪些类型的网站链接，黑名单')
     showed_kinds=models.ManyToManyField(Kind,related_name='beshowkinds',blank=True,null=True,help_text=u'网站被展示哪些类型的网站展示，白名单')
@@ -53,6 +63,9 @@ class WebSite(models.Model):
         return u'%s-%s'%(self.domain,self.name)
 
 class WebUri(models.Model):
+    '''
+    网站网址，跳转目标
+    '''
     website=models.ForeignKey(WebSite,help_text=u'隶属网站')
     url=models.URLField(max_length=250,help_text=u'url链接')
     title=models.CharField(max_length=50,help_text=u'链接标题')
@@ -73,6 +86,9 @@ class WebUri(models.Model):
         return self.title
 
 class CheckApply(models.Model):
+    '''
+    审核申请，主要检查url链接是否可用
+    '''
     website=models.ForeignKey(WebSite,help_text=u'隶属网站')
     url=models.URLField(max_length=250,blank=True,null=True,help_text=u'url链接')
     create_date=models.DateTimeField(auto_created=True,help_text=u'申请创建时间')
@@ -87,6 +103,9 @@ class CheckApply(models.Model):
     def __unicode__(self):
         return self.website.name
 class CheckLog(models.Model):
+    '''
+    审核日志
+    '''
     website=models.ForeignKey(WebSite,help_text=u'被审核的网站')
     weburi=models.ForeignKey(WebUri,blank=True,null=True,help_text=u'被审核的链接')
     checkapply=models.ForeignKey(CheckApply,blank=True,null=True,help_text=u'对应的审核申请')
