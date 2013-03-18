@@ -7,7 +7,7 @@ from django.contrib.auth.views import login, logout
 from TrafficExchange import settings
 from TrafficExchange.traffic.views import index
 from TrafficExchange.traffic.loginviews import reg, reg2
-from TrafficExchange.traffic.views import addWebSite, getCode, dataAnalytics, trafficSettings
+from TrafficExchange.traffic.views import addWebSite, getCode, dataAnalytics, trafficSettings,saveWebSite
 
 admin.autodiscover()
 

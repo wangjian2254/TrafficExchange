@@ -21,7 +21,7 @@
      */
     var URL;
     var ServerURL='/ueditor/';
-    var ServerImgURL='/media/upload/';
+    var ServerImgURL='/static/upload/1/';
     /**
      * 此处配置写法适用于UEditor小组成员开发使用，外部部署用户请按照上述说明方式配置即可，建议保留下面两行，以兼容可在具体每个页面配置window.UEDITOR_HOME_URL的功能。
      */
@@ -113,8 +113,8 @@
 
        ,focus:true //初始化时，是否让编辑器获得焦点true或false
 
-
-      ,minFrameHeight:"420"  // 最小高度,默认320
+       ,initialFrameWidth:"550"  //初始宽度
+      ,minFrameHeight:"620"  // 最小高度,默认320
 
 
        ,autoClearEmptyNode : true    //getContent时，是否删除空的inlineElement节点（包括嵌套的情况）
