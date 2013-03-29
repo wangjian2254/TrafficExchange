@@ -1,6 +1,8 @@
 #coding=utf-8
 import datetime
 from django.contrib.auth.models import User
+from django.contrib.contenttypes import generic
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
 # Create your models here.
@@ -10,6 +12,8 @@ from django.db import models
 
 #class SiteUser(models.Model):
 #    user=models.OneToOneField(User,help_text=u'注册用户')
+from django.db.models.signals import post_save
+from django.dispatch.dispatcher import receiver
 
 class Kind(models.Model):
     '''
@@ -44,10 +48,10 @@ class WebSite(models.Model):
     '''
     domain=models.CharField(max_length=200,unique=True,help_text=u'网站域名，每个二级域名都算是一个')
     name=models.CharField(max_length=50,blank=True,null=True,help_text=u'网站名称')
-    admin=models.ForeignKey(User,help_text=u'隶属用户')
+    user=models.ForeignKey(User,help_text=u'隶属用户')
     is_action=models.BooleanField(default=True,help_text=u'是否正在使用')
     kinds=models.ManyToManyField(Kind,blank=True,null=True,help_text=u'网站类型')
-    is_check=models.BooleanField(default=False,help_text=u'是否通过审核')
+    is_check=models.BooleanField(default=True,help_text=u'是否通过审核')
     last_check_date=models.DateTimeField(default=datetime.datetime.now,blank=True,null=True,help_text=u'最后一次审核时间')
     show_kinds=models.ManyToManyField(Kind,related_name='showkinds',blank=True,null=True,help_text=u'网站展示哪些类型的网站链接，白名单')
     not_show_kinds=models.ManyToManyField(Kind,related_name='notshowkinds',blank=True,null=True,help_text=u'网站不展示哪些类型的网站链接，黑名单')
@@ -61,6 +65,7 @@ class WebSite(models.Model):
         verbose_name=u'网站'
     def __unicode__(self):
         return u'%s-%s'%(self.domain,self.name)
+
 
 class WebUri(models.Model):
     '''
@@ -85,44 +90,73 @@ class WebUri(models.Model):
     def __unicode__(self):
         return self.title
 
-class CheckApply(models.Model):
-    '''
-    审核申请，主要检查url链接是否可用
-    '''
+
+class Event(models.Model):
+    user=models.ForeignKey(User,verbose_name=u'产生事件的用户')
+    website=models.ForeignKey(WebSite,blank=True,null=True,verbose_name=u'产生事件的网站')
+    action_time = models.DateTimeField(default=datetime.datetime.utcnow()+datetime.timedelta(hours =8),verbose_name=u'产生时间', auto_now=True)
+    content_type = models.ForeignKey(ContentType, blank=True, null=True)
+    object_id = models.PositiveIntegerField(verbose_name=u'目标id', blank=True, null=True)
+    object_repr = models.CharField(verbose_name=u'时间目标名称', max_length=200)
+    action_flag = models.PositiveSmallIntegerField(verbose_name=u'事件类型',help_text=u'事件类型新增、修改、删除事件')
+    old_status=models.BooleanField(verbose_name=u'审核前状态',help_text=u'审核前状态')
+    new_status=models.NullBooleanField(verbose_name=u'审核后状态', blank=True, null=True,help_text=u'审核后状态')
+    change_message=models.TextField(verbose_name=u'改变的信息',help_text=u'改变的信息')
+    bz=models.CharField(max_length=200, blank=True, null=True,help_text=u'审核备注')
+
+    event_object=generic.GenericForeignKey('content_type','object_id')
+
+
+
+class Record(models.Model):
     website=models.ForeignKey(WebSite,help_text=u'隶属网站')
-    url=models.URLField(max_length=250,blank=True,null=True,help_text=u'url链接')
-    create_date=models.DateTimeField(auto_created=True,help_text=u'申请创建时间')
-    is_accept=models.BooleanField(default=False,help_text=u'是否受理')
-    user=models.ForeignKey(User,help_text=u'申请人')
+    referer=models.URLField(verbose_name=u'点击所发生的网页')
+    towebsite=models.ForeignKey(WebSite,related_name=u'towebsite',help_text=u'转向网站')
+    tourl=models.URLField(verbose_name=u'转向网站')
+    createTime=models.DateTimeField(default=datetime.datetime.now,help_text=u'发生时间')
 
-    class Admin():
-        list_filter=['website']
-        pass
-    class Meta():
-        verbose_name=u'审核申请'
-    def __unicode__(self):
-        return self.website.name
-class CheckLog(models.Model):
-    '''
-    审核日志
-    '''
-    website=models.ForeignKey(WebSite,help_text=u'被审核的网站')
-    weburi=models.ForeignKey(WebUri,blank=True,null=True,help_text=u'被审核的链接')
-    checkapply=models.ForeignKey(CheckApply,blank=True,null=True,help_text=u'对应的审核申请')
-    old_status=models.BooleanField(help_text=u'审核前状态')
-    now_status=models.BooleanField(help_text=u'审核后状态')
-    type=models.IntegerField(default=1,help_text=u'审核类型，1：常规审核，2：受理审核申请，3：抽查审核')
-    bz=models.CharField(max_length=200,help_text=u'审核备注')
-    user=models.ForeignKey(User,help_text=u'审核人')
 
-    class Admin():
-        search_fields=['website__name','website__domain']
-        list_filter=['website']
-        pass
-    class Meta():
-        verbose_name=u'审核日志'
-    def __unicode__(self):
-        return u'%s-%s'%(self.weburi.title,self.website.name)
+
+#
+#class CheckApply(models.Model):
+#    '''
+#    审核申请，主要检查url链接是否可用
+#    '''
+#    website=models.ForeignKey(WebSite,help_text=u'隶属网站')
+#    url=models.URLField(max_length=250,blank=True,null=True,help_text=u'url链接')
+#    create_date=models.DateTimeField(auto_created=True,help_text=u'申请创建时间')
+#    is_accept=models.BooleanField(default=False,help_text=u'是否受理')
+#    user=models.ForeignKey(User,help_text=u'申请人')
+#
+#    class Admin():
+#        list_filter=['website']
+#        pass
+#    class Meta():
+#        verbose_name=u'审核申请'
+#    def __unicode__(self):
+#        return self.website.name
+#
+#class CheckLog(models.Model):
+#    '''
+#    审核日志
+#    '''
+#    website=models.ForeignKey(WebSite,help_text=u'被审核的网站')
+#    weburi=models.ForeignKey(WebUri,blank=True,null=True,help_text=u'被审核的链接')
+#    checkapply=models.ForeignKey(CheckApply,blank=True,null=True,help_text=u'对应的审核申请')
+#    old_status=models.BooleanField(help_text=u'审核前状态')
+#    now_status=models.BooleanField(help_text=u'审核后状态')
+#    type=models.IntegerField(default=1,help_text=u'审核类型，1：常规审核，2：受理审核申请，3：抽查审核')
+#    bz=models.CharField(max_length=200,help_text=u'审核备注')
+#    user=models.ForeignKey(User,help_text=u'审核人')
+#
+#    class Admin():
+#        search_fields=['website__name','website__domain']
+#        list_filter=['website']
+#        pass
+#    class Meta():
+#        verbose_name=u'审核日志'
+#    def __unicode__(self):
+#        return u'%s-%s'%(self.weburi.title,self.website.name)
 
 
 

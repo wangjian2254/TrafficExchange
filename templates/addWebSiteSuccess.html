@@ -9,37 +9,35 @@
         if(!valSubmit()){
             return;
             }
-        editor.sync();
+        //editor.sync();
         $j("#form1")[0].submit();
     }
 
 </script>
     <div class="con_center" >
-    <form id="form1" action="/saveWebSite" method="post">
+    <form id="form1" action="/checkWebSite/" method="post">
         <table id="website_table" class="table0 bigtable tdpadding tablemargin" width="100%" cellpadding="0" cellspacing="0" border="0">
             <tr >
-                <td align="left" colspan="4">
-                    <b>新建网站</b><input type="hidden" name="id" value="{{ website.id|default_if_none:"" }}">
-                    <a href="/websitelist"  style="float: right;" ><div class="btn_style1"
-                                                 style="background:url(/media/images/btn_mod.gif) no-repeat 0 0;"
-                                                 onmouseover="this.style.backgroundPosition='0 -24px'"
-                                                 onmouseout="this.style.backgroundPosition='0 0'"
-                                                 onmousedown="this.style.backgroundPosition='0 -48px'"
-                                                 onmouseup="this.style.backgroundPosition='0 -24px'">网站列表</div></a>
+                <td align="left" bgcolor="#87ceeb">
+                    <b>1.输入网站</b>
+                </td>
+                <td align="left" bgcolor="#87ceeb">
+                    <b>2.验证网站</b>
+                </td>
+                <td align="left" bgcolor="#87ceeb">
+                    <b>3.完成网站验证</b>
                 </td>
             </tr>
+
             <tr>
-                <td align="right">
-                    <span class="red_star"></span>网站网址:
-                </td>
-                <td colspan="3">
-                    http://<input type="text" name="name"  val="{'required':true,'title':'网站网址'}" value="{{ website.domain|default_if_none:"" }}">
+                <td align="center" style="padding: 10px;" colspan="4">
+                    完成了{{ weburl }} 的校验。
                 </td>
             </tr>
 
             <tr>
                 <td align="center" colspan="4">
-                    <a href="#" onclick="submitForm()"  class="commit_btn" >创建</a>
+                    <a href="/dataAnalytics/"   class="commit_btn" >数据分析</a>
                  {% csrf_token %}
                 </td>
             </tr>

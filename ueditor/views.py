@@ -21,8 +21,8 @@ import json
 #    user=request.user
 #    return render_to_response('default/adminedit.html',locals())
 from django.views.decorators.csrf import csrf_exempt
-from zhaopin.ueditor.models import UeditorFile
-from zhaopin.settings import MEDIA_ROOT
+from TrafficExchange.ueditor.models import UeditorFile
+from TrafficExchange.settings import MEDIA_ROOT
 
 UPLOADDIR=MEDIA_ROOT+'/upload/'
 

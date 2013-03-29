@@ -9,13 +9,13 @@
         if(!valSubmit()){
             return;
             }
-        editor.sync();
+        //editor.sync();
         $j("#form1")[0].submit();
     }
 
 </script>
     <div class="con_center" >
-    <form id="form1" action="/saveWebSite" method="post">
+    <form id="form1" action="/checkWebSite/" method="post">
         <table id="website_table" class="table0 bigtable tdpadding tablemargin" width="100%" cellpadding="0" cellspacing="0" border="0">
             <tr >
                 <td align="left" bgcolor="#87ceeb">
@@ -30,18 +30,18 @@
             </tr>
 
             <tr>
-                <td align="center" colspan="4">
-                    请按步骤完成，网站的验证：
+                <td align="left" style="padding: 10px;" colspan="4">
+                    请按步骤完成，网站的验证: http://{{ weburl|default_if_none:'' }}<input type="hidden" name="domain" value="http://{{ weburl|default_if_none:"" }}/">
                 </td>
             </tr>
             <tr>
                 <td align="center" colspan="4">
-                    <div style="width: 40%;float: left;background-color: #87ceeb;">
+                    <div style="width: 70%;text-align:left;padding: 10px;;background-color: #87ceeb;">
                         <p>
-                            1.在您网站的根目录下创建“84631sxd.txt” 文件。
+                            1.在您网站的根目录下创建“{{ filename }}.txt” 文件。
                         </p>
                         <p>
-                        2.文件内容为：“sdfsdfwerssdf234fdasdf234sfawerf23sdfsarf”。
+                        2.文件内容为：“{{ text }}”。
                         </p>
                         <p>
                         3.点击完成验证。

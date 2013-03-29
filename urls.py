@@ -7,7 +7,8 @@ from django.contrib.auth.views import login, logout
 from TrafficExchange import settings
 from TrafficExchange.traffic.views import index
 from TrafficExchange.traffic.loginviews import reg, reg2
-from TrafficExchange.traffic.views import addWebSite, getCode, dataAnalytics, trafficSettings,saveWebSite
+from TrafficExchange.traffic.views import addWebSite, getCode, dataAnalytics, trafficSettings,saveWebSite,checkWebSite
+from TrafficExchange.traffic.views_record import toUrl, fromUrl,getLinkUrl
 
 admin.autodiscover()
 
@@ -19,9 +20,13 @@ urlpatterns = patterns('',
     # traffic
     (r'^addWebSite/$',addWebSite),
     (r'^saveWebSite/$',saveWebSite),
+    (r'^checkWebSite/$',checkWebSite),
     (r'^getCode/$',getCode),
     (r'^dataAnalytics/$',dataAnalytics),
     (r'^trafficSettings/$',trafficSettings),
+    (r'^toUrl/$',toUrl),
+    (r'^fromUrl/$',fromUrl),
+    (r'^getLinkUrl/$',getLinkUrl),
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     # User reg or login

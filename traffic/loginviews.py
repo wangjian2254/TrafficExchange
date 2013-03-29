@@ -14,6 +14,7 @@ def reg(request):
 
 def reg2(request):
     username=request.POST.get('username','')
+    nickname=request.POST.get('nickname','')
     password=request.POST.get('password','')
     r_password=request.POST.get('r_password','')
     type=request.POST.get('type','')
@@ -29,6 +30,7 @@ def reg2(request):
             else:
                 user=User()
                 user.username=username
+                user.last_name=nickname
                 user.set_password(password)
                 user.is_active=True
                 user.email=username

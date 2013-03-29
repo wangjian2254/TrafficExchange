@@ -9,13 +9,13 @@
         if(!valSubmit()){
             return;
             }
-        editor.sync();
+//        editor.sync();
         $j("#form1")[0].submit();
     }
 
 </script>
     <div class="con_center" >
-    <form id="form1" action="/saveWebSite" method="post">
+    <form id="form1" action="/saveWebSite/" method="post">
         <table id="website_table" class="table0 bigtable tdpadding tablemargin" width="100%" cellpadding="0" cellspacing="0" border="0">
             <tr >
                 <td align="left"  bgcolor="#87ceeb">
@@ -29,10 +29,9 @@
                 </td>
             </tr>
             <tr>
-                <td align="right">
+                <td align="center" colspan="3">
                     <span class="red_star"></span>网站网址:
-                </td>
-                <td colspan="2">
+
                     http://<input type="text" name="domain"  val="{'required':true,'title':'网站网址'}" value="{{ website.domain|default_if_none:"" }}">
                 </td>
             </tr>

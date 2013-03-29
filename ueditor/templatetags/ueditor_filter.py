@@ -2,7 +2,7 @@
 __author__ = '王健'
 
 from django import template
-from zhaopin.settings import MEDIA_URL
+from TrafficExchange.settings import MEDIA_URL
 register=template.Library()
 
 @register.filter(name='ueditorAll')
